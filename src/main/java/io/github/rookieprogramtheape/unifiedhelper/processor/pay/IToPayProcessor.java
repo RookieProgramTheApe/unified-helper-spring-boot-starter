@@ -9,5 +9,5 @@ import io.github.rookieprogramtheape.unifiedhelper.common.resp.CommonResponse;
  * @date 2024/08/12
  */
 public interface IToPayProcessor {
-    public CommonResponse wxPay(String openId, String appId, String amount);
+    CommonResponse wxPay(String openId, String appId, String amount);
 }

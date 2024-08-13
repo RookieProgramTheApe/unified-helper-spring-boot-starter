@@ -14,12 +14,16 @@ import javax.annotation.Resource;
  */
 @Component
 public class UnifiedHelper {
+
     /**
      * 支付相关
      */
     @Resource
     public IToPayProcessor pay;
 
+    /**
+     * 退款相关
+     */
     @Resource
     public IRefundProcessor refund;
 }

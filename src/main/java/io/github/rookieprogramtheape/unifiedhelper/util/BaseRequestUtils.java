@@ -69,7 +69,6 @@ public class BaseRequestUtils {
                 // 返回结果
                 String body = response.body();
                 return JSON.parseObject(body, CommonResponse.class);
-
             }
         } catch (HttpException e) {
             throw exception(TO_PAY_HTTP_FAIL);

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * 通用响应类
  *
@@ -38,9 +40,9 @@ public class CommonResponse<T> {
      *
      * @param msg  消息
      * @param code 状态码
-     * @return {@link CommonResponse }<{@link T }>
+     * @return {@link CommonResponse }
      */
-    public static <T> CommonResponse<T> error(String msg, Integer code) {
+    public static<T> CommonResponse<T> error(String msg, Integer code) {
         CommonResponse<T> response = new CommonResponse<>();
         response.msg = msg;
         response.code = code;
@@ -51,9 +53,9 @@ public class CommonResponse<T> {
      * 错误响应
      *
      * @param msg 消息
-     * @return {@link CommonResponse }<{@link T }>
+     * @return {@link CommonResponse }
      */
-    public static <T> CommonResponse<T> error(String msg) {
+    public static<T> CommonResponse<T> error(String msg) {
         return error(msg, ERROR);
     }
 
@@ -61,9 +63,9 @@ public class CommonResponse<T> {
      * 成功响应
      *
      * @param data 数据
-     * @return {@link CommonResponse }<{@link T }>
+     * @return {@link CommonResponse }
      */
-    public static <T> CommonResponse<T> success(T data) {
+    public static<T> CommonResponse<T> success(T data) {
         CommonResponse<T> response = new CommonResponse<>();
         response.data = data;
         response.code = SUCCESS;
@@ -71,12 +73,16 @@ public class CommonResponse<T> {
         return response;
     }
 
+    public Boolean isSuccess(){
+        return Objects.equals(this.getCode(), SUCCESS) && Objects.equals(this.getMsg(), SUCCESS_MSG);
+    }
+
     /**
      * 成功响应
      *
-     * @return {@link CommonResponse }<{@link T }>
+     * @return {@link CommonResponse }
      */
-    public static <T> CommonResponse<T> success() {
+    public static<T> CommonResponse<T> success() {
         return success(null);
     }
 
