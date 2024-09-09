@@ -1,7 +1,7 @@
 package io.github.rookieprogramtheape.unifiedhelper.core;
 
 import io.github.rookieprogramtheape.unifiedhelper.processor.pay.IToPayProcessor;
-import io.github.rookieprogramtheape.unifiedhelper.processor.refund.IRefundProcessor;
+import io.github.rookieprogramtheape.unifiedhelper.processor.refund.IToRefundProcessor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -16,14 +16,14 @@ import javax.annotation.Resource;
 public class UnifiedHelper {
 
     /**
-     * 支付相关
+     * 支付
      */
     @Resource
-    public IToPayProcessor pay;
+    public IToPayProcessor toPay;
 
     /**
-     * 退款相关
+     * 退款
      */
     @Resource
-    public IRefundProcessor refund;
+    public IToRefundProcessor toRefund;
 }

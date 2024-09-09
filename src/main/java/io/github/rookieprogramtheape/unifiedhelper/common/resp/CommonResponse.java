@@ -15,7 +15,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonResponse<T> {
+public class CommonResponse {
 
 
     /**
@@ -32,7 +32,7 @@ public class CommonResponse<T> {
 
     private Integer code;
     private String msg;
-    private T data;
+    private Object data;
 
 
     /**
@@ -42,8 +42,8 @@ public class CommonResponse<T> {
      * @param code 状态码
      * @return {@link CommonResponse }
      */
-    public static<T> CommonResponse<T> error(String msg, Integer code) {
-        CommonResponse<T> response = new CommonResponse<>();
+    public static CommonResponse error(String msg, Integer code) {
+        CommonResponse response = new CommonResponse();
         response.msg = msg;
         response.code = code;
         return response;
@@ -55,7 +55,7 @@ public class CommonResponse<T> {
      * @param msg 消息
      * @return {@link CommonResponse }
      */
-    public static<T> CommonResponse<T> error(String msg) {
+    public static CommonResponse error(String msg) {
         return error(msg, ERROR);
     }
 
@@ -65,8 +65,8 @@ public class CommonResponse<T> {
      * @param data 数据
      * @return {@link CommonResponse }
      */
-    public static<T> CommonResponse<T> success(T data) {
-        CommonResponse<T> response = new CommonResponse<>();
+    public static CommonResponse success(Object data) {
+        CommonResponse response = new CommonResponse();
         response.data = data;
         response.code = SUCCESS;
         response.msg = SUCCESS_MSG;
@@ -82,7 +82,7 @@ public class CommonResponse<T> {
      *
      * @return {@link CommonResponse }
      */
-    public static<T> CommonResponse<T> success() {
+    public static CommonResponse success() {
         return success(null);
     }
 
