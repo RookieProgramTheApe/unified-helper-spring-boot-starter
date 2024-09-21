@@ -1,6 +1,7 @@
 package io.github.rookieprogramtheape.unifiedhelper.processor.pay;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.github.rookieprogramtheape.unifiedhelper.common.resp.CommonResponse;
 import io.github.rookieprogramtheape.unifiedhelper.dto.PayCallbackDTO;
@@ -44,10 +45,36 @@ public class ToPayProcessorImpl implements IToPayProcessor {
         return baseRequestUtils.payExecute("/unifiedPay", orderNo, params);
     }
 
+
     @Override
     public CommonResponse wxPay(String openId, String appId, Long orderNo, BigDecimal amount) {
         return wxPay(openId, appId, orderNo, String.valueOf(amount.multiply(new BigDecimal("100")).intValue()));
     }
+
+
+    @Override
+    public CommonResponse wxPay(String appId, String appSecret, String mchNo, String openId, String wxAppId, Long orderNo, String amount) {
+        if (StrUtil.hasEmpty(appId, appSecret, mchNo)) {
+            return CommonResponse.error("平台参数不能为空");
+        }
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("amount", amount);
+        HashMap<String, Object> payExtras = new HashMap<>();
+        payExtras.put("appId", wxAppId);
+        payExtras.put("openId", openId);
+        params.put("wayCode", "wx");
+        params.put("payExtras", payExtras);
+
+        return baseRequestUtils.payExecute("/unifiedPay", orderNo, params, appId, appSecret, mchNo);
+    }
+
+
+    @Override
+    public CommonResponse wxPay(String appId, String appSecret, String mchNo, String openId, String wxAppId, Long orderNo, BigDecimal amount) {
+        return wxPay(appId, appSecret, mchNo, openId, wxAppId, orderNo, String.valueOf(amount.multiply(new BigDecimal("100")).intValue()));
+    }
+
 
     @Override
     public CommonResponse wxPayCallbackDispose(HttpServletRequest request) {

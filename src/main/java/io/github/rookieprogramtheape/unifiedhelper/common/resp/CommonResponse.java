@@ -86,4 +86,11 @@ public class CommonResponse {
         return success(null);
     }
 
+    public static CommonResponse callbackSuccess(){
+        CommonResponse response = new CommonResponse();
+        response.code = SUCCESS;
+        response.msg = SUCCESS_MSG;
+        return response;
+    }
+
 }

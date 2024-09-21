@@ -42,7 +42,7 @@ public class BaseRequestUtils {
      * 支付执行
      *
      * @param url     url 地址
-     * @param orderNo
+     * @param orderNo 订单号 （交易唯一标识） 回调时通过此确定订单
      * @param params  params 参数
      * @return {@link CommonResponse } 响应结果
      */
@@ -57,7 +57,51 @@ public class BaseRequestUtils {
         params.put("timestamp", System.currentTimeMillis());
         params.put("currency", "CNY");
         String signStr = getSign(((String) params.get("appId")), ((String) params.get("appSecret")), params);
-        log.info("支付参数内容：{}", signStr);
+        params.put("sign", signStr);
+
+        String requestUrl = CharSequenceUtil.format("{}/{}", unifiedPaymentProperties.getBaseUrl(), url);
+
+        // 构建POST请求
+        HttpRequest httpRequest = HttpRequest.post(requestUrl)
+                .header("Content-Type", "application/json;charset=UTF-8")
+                .timeout(unifiedPaymentProperties.getTimeOut());
+        try {
+            @Cleanup HttpResponse response = httpRequest.body(JSONUtil.toJsonStr(params)).execute();
+            if (response.isOk()) {
+                // 返回结果
+                String body = response.body();
+                return JSON.parseObject(body, CommonResponse.class);
+            }
+        } catch (HttpException e) {
+            throw exception(TO_PAY_HTTP_FAIL);
+        } catch (Exception e) {
+            throw exception(TO_PAY_FAIL);
+        }
+        return null;
+    }
+
+    /**
+     * 支付执行
+     *
+     * @param url       url 地址
+     * @param orderNo   订单号 （交易唯一标识） 回调时通过此确定订单
+     * @param params    params 参数
+     * @param appId     支付平台的appId
+     * @param appSecret 支付平台的appSecret
+     * @param mchNo     支付平台的商户号
+     * @return {@link CommonResponse } 响应结果
+     */
+    public CommonResponse payExecute(String url, Long orderNo, Map<String, Object> params, String appId, String appSecret, String mchNo) {
+        // 对参数进行签名
+        params.put("appId", appId);
+        params.put("appSecret", appSecret);
+        params.put("mchNo", mchNo);
+        params.put("divisionMode", unifiedPaymentProperties.getDivisionMode());
+        params.put("notifyUrl", unifiedPaymentProperties.getPayNotifyUrl());
+        params.put("mchOrderNo", orderNo);
+        params.put("timestamp", System.currentTimeMillis());
+        params.put("currency", "CNY");
+        String signStr = getSign(((String) params.get("appId")), ((String) params.get("appSecret")), params);
         params.put("sign", signStr);
 
         String requestUrl = CharSequenceUtil.format("{}/{}", unifiedPaymentProperties.getBaseUrl(), url);
@@ -94,9 +138,7 @@ public class BaseRequestUtils {
         params.put("refundAmount", refundAmount);
         params.put("timestamp", System.currentTimeMillis());
         params.put("currency", "CNY");
-        log.info("退款参数：{}", params);
         String signStr = getSign(((String) params.get("appId")), ((String) params.get("appSecret")), params);
-        log.info("退款参数内容：{}", signStr);
         params.put("sign", signStr);
 
         String requestUrl = CharSequenceUtil.format("{}/{}", unifiedPaymentProperties.getBaseUrl(), url);
